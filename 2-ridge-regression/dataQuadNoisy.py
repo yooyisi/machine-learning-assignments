@@ -19,10 +19,10 @@ def mdot(*args):
     """Multi argument dot function. http://wiki.scipy.org/Cookbook/MultiDot"""
     return reduce(np.dot, args)
 
-
-def prepend_one(X):
+def prepend_columns(X):
     """prepend a one vector to X."""
-    return np.column_stack([np.ones(X.shape[0]), X])
+    temX = np.column_stack([np.ones(X.shape[0]), X])
+    return np.column_stack([temX , np.square(X)])
 
 def grid2d(start, end, num=50):
     """Create an 2D array where each row is a 2D coordinate.
@@ -52,19 +52,19 @@ ax.set_title("raw data")
 plt.draw()  # show, use plt.show() for blocking
 
 # prep for linear reg.
-X = prepend_one(X)
+X = prepend_columns(X)
 print "X.shape:", X.shape
 
 # prep some parameters
-p = 10 # lamda
-I = np.eye(3)
+p = 0 # lamda
+I = np.eye(5)
 
 # Fit model/compute optimal parameters beta
 beta_ = mdot(inv(dot(X.T, X)+ p*I), X.T, y)
 print "Optimal beta:", beta_
 
 # prep for prediction
-X_grid = prepend_one(grid2d(-3, 3, num=30))
+X_grid = prepend_columns(grid2d(-3, 3, num=30))
 print "X_grid.shape:", X_grid.shape
 # Predict with trained model
 y_grid = mdot(X_grid, beta_)
