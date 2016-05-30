@@ -22,6 +22,7 @@ def mdot(*args):
 def prepend_columns(X):
     """prepend a one vector to X."""
     temX = np.column_stack([np.ones(X.shape[0]), X])
+    temX = np.column_stack([temX, X[:,0]*X[:,1]])
     return np.column_stack([temX , np.square(X)])
 
 def grid2d(start, end, num=50):
@@ -57,7 +58,7 @@ print "X.shape:", X.shape
 
 # prep some parameters
 p = 1 # lamda
-I = np.eye(5)
+I = np.eye(6)
 
 # Fit model/compute optimal parameters beta
 beta_ = mdot(inv(dot(X.T, X)+ p*I), X.T, y)
