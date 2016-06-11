@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from scipy.stats import logistic
+import matplotlib.pyplot as plt
 
 # hidden layer size
 hl_size = 100
@@ -63,10 +64,29 @@ def delta_l_plus_1(y, f):
     else:
         return 0
 
+mean_loss_list = []
+for i in range(0, 30):
+    dw_lists = []
+    hinge_loss_values = []
+    for input, output in zip(inputs, outputs):
+        x_list, f = forward(input, w)
+        del_p1 = delta_l_plus_1(output, f)
+        dw_list = backward(del_p1, input, w)
+        dw_lists.append(dw_list)
+        hinge_loss_values.append(hinge_loss(output, f))
+    meanLoss = np.mean(hinge_loss_values)
+    mean_loss_list.append(meanLoss)
+    print meanLoss
+    dw_values = dw_lists[0]
+    for i in range(1, len(dw_lists)):
+        dw_values += dw_lists[i]
 
-for input, output in zip(inputs, outputs):
-    x_list, f = forward(input, w)
-    del_p1 = delta_l_plus_1(output, f)
-    dw_list = backward(del_p1, input, w)
-    w = tuple(wi - alpha * dwi for wi, dwi in zip(w, dw_list))
-    print hinge_loss(output, f)
+    w = tuple(wi - alpha * dwi for wi, dwi in zip(w, dw_values))
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(mean_loss_list)
+ax.set_xlabel('iter no.')
+ax.set_ylabel('mean loss')
+
+plt.show()
