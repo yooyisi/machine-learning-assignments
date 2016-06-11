@@ -2,6 +2,7 @@ import numpy as np
 import math
 from scipy.stats import logistic
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.axes3d import Axes3D # 3D plotting
 
 # hidden layer size
 hl_size = 100
@@ -65,7 +66,7 @@ def delta_l_plus_1(y, f):
         return 0
 
 mean_loss_list = []
-for i in range(0, 30):
+for i in range(0, 15):
     dw_lists = []
     hinge_loss_values = []
     for input, output in zip(inputs, outputs):
@@ -88,5 +89,11 @@ ax = fig.add_subplot(111)
 ax.plot(mean_loss_list)
 ax.set_xlabel('iter no.')
 ax.set_ylabel('mean loss')
+
+fig_3D = plt.figure()
+ax = fig_3D.add_subplot(111, projection='3d')
+f_list = np.array([forward(xx, w)[1] for xx in inputs])
+print f_list.shape
+ax.scatter(inputs[:,1],inputs[:,2],f_list,color="red")
 
 plt.show()
